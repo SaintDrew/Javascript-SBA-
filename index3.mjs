@@ -4,7 +4,7 @@ axios.defaults.headers.common["x-api-key"]= apiKey;
 
 export async function catApi() {
     const data = await axios("/breeds");
-    console.log(data)
+    // console.log(data)
     return data;
 }
 
