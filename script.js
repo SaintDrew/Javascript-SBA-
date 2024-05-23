@@ -22,42 +22,74 @@ fetch(url, {
         //filter to only include those with an `image` object
         data = data.filter(img => img.image?.url != null)
 
-        async function searchImages() {
-            inputData = inputEl.value;
-            const url = `https://api.thecatapi.com/v1/images/search?breed_ids={breed.id}`
-            // or this url: `https://api.thecatapi.com/v1/search/photos?page=${page}&query=${inputData}&client_id=${accessKey}`
-            const response = await fetch(url)
-            const data = await response.json()
+        storedBreeds = data;
 
-            const results = data.results
+        for (let i = 0; i < storedBreeds.length; i++) {
+            const breed = storedBreeds[i];
+            let option = document.createElement('option');
 
-            if (page === 1) {
-                searchResults.innerHTML = ""
-            }
+            //skip any breeds that don't have an image
+            if (!breed.image) continue
 
-            results.map((result) => {
-                const imageWrapper = document.createElement('div')
-                imageWrapper.classList.add("search-result")
-                const image = document.createElement('img')
-                image.src = result.url.small
-                image.alt = result.alt_description
-                const imageLink = document.createElement('a')
-                imageLink.href = result.links.html
-                imageLink.target = "_blank"
-                imageLink.textContent = result.alt_description
+            //use the current array index
+            option.value = i;
+            option.innerHTML = `${breed.name}`;
+            document.getElementById('breed_selector').appendChild(option);
 
-                imageWrapper.appendChild(image);
-                imageWrapper.appendChild(imageLink);
-                imageWrapper.appendChild(imageWrapper);
-            });
-
-            page++
-            if (page > 1) {
-                showMore.style.display = "block"
-            }
         }
-        formEl.addEventListener("submit", (event) => {
-            event.preventDefault()
-            page = 1;
-            searchImages
-        });
+        //show the first breed by default
+        showBreedImage(0)
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+
+function showBreedImage(index) {
+    document.getElementById("breed_image").src = storedBreeds[index].image.url;
+
+    document.getElementById("breed_json").textContent = storedBreeds[index].temperament
+
+
+    document.getElementById("wiki_link").href = storedBreeds[index].wikipedia_url
+    document.getElementById("wiki_link").innerHTML = storedBreeds[index].wikipedia_url
+}
+
+async function searchImages() {
+    inputData = inputEl.value;
+    const url = `https://api.thecatapi.com/v1/images/search?breed_ids={breed.id}`
+    // or this url: `https://api.thecatapi.com/v1/search/photos?page=${page}&query=${inputData}&client_id=${accessKey}`
+    const response = await fetch(url)
+    const data = await response.json()
+
+    const results = data.results
+
+    if (page === 1) {
+        searchResults.innerHTML = ""
+    }
+
+    results.map((result) => {
+        const imageWrapper = document.createElement('div')
+        imageWrapper.classList.add("search-result")
+        const image = document.createElement('img')
+        image.src = result.url.small
+        image.alt = result.alt_description
+        const imageLink = document.createElement('a')
+        imageLink.href = result.links.html
+        imageLink.target = "_blank"
+        imageLink.textContent = result.alt_description
+
+        imageWrapper.appendChild(image);
+        imageWrapper.appendChild(imageLink);
+        imageWrapper.appendChild(imageWrapper);
+    });
+
+    page++
+    if (page > 1) {
+        showMore.style.display = "block"
+    }
+}
+formEl.addEventListener("submit", (event) => {
+    event.preventDefault()
+    page = 1;
+    searchImages
+});
