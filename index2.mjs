@@ -1,4 +1,6 @@
 import * as cats from "./index3.mjs";
+// const catBreed = 
+// const catOptions = 
 const catSelector = document.getElementById("catBreed")
 cats.catApi().then(furball => {
     console.log(furball)
@@ -12,7 +14,7 @@ cats.catApi().then(furball => {
     });
 });
 // Event Listener to select the breed of cats
-// console.log(catSecletor);
+// console.log(catSelector);
 catSelector.addEventListener("change", loadCat);
 
 async function loadCat() {

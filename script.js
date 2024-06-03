@@ -1,23 +1,32 @@
 const accessKey = "live_EiO9q0YpB8fImWcju9OuenAXLHNY91yxpi4G1nYfVSFa6Hu0bTaRGG2bJorXBMgB"
+const api_Key = "live_EiO9q0YpB8fImWcju9OuenAXLHNY91yxpi4G1nYfVSFa6Hu0bTaRGG2bJorXBMgB";
 
 const formEl = document.querySelector("form")
-const inputEl = document.getElementById("search-input")
+const inputEl = document.getElementById("search-input").value;
 const searchResults = document.querySelector(".search-results")
+const url = `https://api.thecatapi.com/v1/breeds`
 // const showMore = document.getElementById('show-more-button') * decide on whether or not to add more button *
 
+
+let formpage = document.getElementById("form1");
 let inputData = "";
 let page = 1;
 let storedBreeds = [];
+formpage.addEventListener('submit',async (e) => {
+    e.preventDefault
+    console.log(formpage.search.value);
+});
 
 fetch(url, {
     headers: {
-        'x-api-key': api_key
+        'x-api-key': api_Key
     }
 })
-    .then((response) => {
-        return response.json();
-    })
-    .then((data) => {
+    .then(async (response) => {
+        const jsondata = await response.json()
+    // })
+    // .then((data) => {
+        console.log( "this is data" ,jsondata );
 
         //filter to only include those with an `image` object
         data = data.filter(img => img.image?.url != null)
@@ -56,7 +65,6 @@ function showBreedImage(index) {
 
 async function searchImages() {
     inputData = inputEl.value;
-    const url = `https://api.thecatapi.com/v1/images/search?breed_ids={breed.id}`
     // or this url: `https://api.thecatapi.com/v1/search/photos?page=${page}&query=${inputData}&client_id=${accessKey}`
     const response = await fetch(url)
     const data = await response.json()
@@ -91,5 +99,7 @@ async function searchImages() {
 formEl.addEventListener("submit", (event) => {
     event.preventDefault()
     page = 1;
-    searchImages
+    searchImages()
+    console.log('button')
 });
+
