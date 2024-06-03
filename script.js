@@ -5,7 +5,9 @@ const formEl = document.querySelector("form")
 const inputEl = document.getElementById("search-input").value;
 const searchResults = document.querySelector(".search-results")
 const url = `https://api.thecatapi.com/v1/breeds`
+const breedsName = document.getElementById('breed_selector');
 // const showMore = document.getElementById('show-more-button') * decide on whether or not to add more button *
+
 
 
 let formpage = document.getElementById("form1");
@@ -15,6 +17,10 @@ let storedBreeds = [];
 formpage.addEventListener('submit',async (e) => {
     e.preventDefault
     console.log(formpage.search.value);
+    const searchdata = formpage.search.value.toLowerCase()
+    console.log(searchdata);
+    const filterData = storedBreeds.filter(cat => cat.name.toLowerCase().includes(searchdata))
+    console.log(filterData);
 });
 
 fetch(url, {
@@ -26,32 +32,48 @@ fetch(url, {
         const jsondata = await response.json()
     // })
     // .then((data) => {
-        console.log( "this is data" ,jsondata );
+        console.log( "this is data" , jsondata );
+let data = jsondata;
 
         //filter to only include those with an `image` object
         data = data.filter(img => img.image?.url != null)
 
         storedBreeds = data;
+let breedSearchName = formpage.search.value;
 
         for (let i = 0; i < storedBreeds.length; i++) {
             const breed = storedBreeds[i];
+            let breedName = breed.name;
             let option = document.createElement('option');
 
             //skip any breeds that don't have an image
             if (!breed.image) continue
 
             //use the current array index
-            option.value = i;
-            option.innerHTML = `${breed.name}`;
-            document.getElementById('breed_selector').appendChild(option);
+            option.value = `${breedName}`;
+            option.innerHTML = `${breedName}`;
+            breedsName.appendChild(option);
 
         }
+
         //show the first breed by default
         showBreedImage(0)
     })
     .catch(function (error) {
         console.log(error);
     });
+
+    breedsName.addEventListener('change',(e) => {
+        const inputEl2 = document.getElementById("search-input");
+        let inputName = formpage.search.value
+        let inputPlaceHolder = formpage.search.inputPlaceHolder
+        // console.log(e.target.value);
+        inputName = e.target.value;
+        console.log(inputEl2);
+        inputEl2.setAttribute('placeholder', inputName);
+        console.log(inputName);
+
+    })
 
 function showBreedImage(index) {
     document.getElementById("breed_image").src = storedBreeds[index].image.url;

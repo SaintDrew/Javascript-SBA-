@@ -3,10 +3,11 @@ import * as cats from "./index3.mjs";
 // const catOptions = 
 const catSelector = document.getElementById("catBreed")
 cats.catApi().then(furball => {
-    console.log(furball)
+    // console.log(furball)
     const furballArray = furball.data;
+    // console.log(furballArray);
     furballArray.forEach(element => {
-        // console.log(element)
+        console.log(element)
         let catOptions = document.createElement("option");
         catOptions.setAttribute("value", `${element.breed_group}`);
         catOptions.textContent = `${element.breed_group}`;
